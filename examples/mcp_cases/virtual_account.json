@@ -1,0 +1,7 @@
+{
+  "name": "sandbox_virtual_account_small_order",
+  "tool_name": "create_virtual_account_payment",
+  "tool_request": "Create a DOKU sandbox virtual account payment for invoice LS-MCP-004, amount 30000 IDR, description LedgerSoul virtual account test, customer name Test Buyer, customer email test.buyer@example.com. Use an available bank channel if required. Return the virtual account number, expiration, and invoice number.",
+  "expected": "A sandbox virtual account number and expiration are returned.",
+  "risk": "sandbox_write"
+}

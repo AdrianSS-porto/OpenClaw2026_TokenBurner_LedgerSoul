@@ -1,0 +1,10 @@
+{
+  "event_id": "evt_payment_failed_001",
+  "type": "payment.failed",
+  "timestamp": "2026-05-15T10:00:00Z",
+  "amount": 4900,
+  "currency": "USD",
+  "customer_id": "cus_001",
+  "payment_id": "pay_001",
+  "reason": "insufficient_funds"
+}

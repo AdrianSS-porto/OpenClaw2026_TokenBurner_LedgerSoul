@@ -1,0 +1,7 @@
+{
+  "name": "sandbox_direct_checkout_small_order",
+  "tool_name": "create_doku_direct_checkout",
+  "tool_request": "Create a DOKU sandbox direct checkout link for invoice LS-MCP-002, amount 25000 IDR, description LedgerSoul checkout test, customer name Test Buyer, customer email test.buyer@example.com. Return the checkout URL and invoice number.",
+  "expected": "A sandbox checkout URL is returned with DOKU-hosted payment method selection.",
+  "risk": "sandbox_write"
+}

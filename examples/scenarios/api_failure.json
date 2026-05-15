@@ -1,0 +1,10 @@
+{
+  "event_id": "evt_api_failure_001",
+  "type": "payment.api_failure",
+  "timestamp": "2026-05-15T10:20:00Z",
+  "amount": 4900,
+  "currency": "USD",
+  "customer_id": "cus_004",
+  "payment_id": "pay_004",
+  "reason": "provider_timeout"
+}

@@ -1,0 +1,15 @@
+{
+  "event_id": "evt_transaction_lookup_001",
+  "type": "transaction.lookup_requested",
+  "timestamp": "2026-05-15T11:00:00Z",
+  "amount": 20000,
+  "currency": "IDR",
+  "customer_id": "cus_demo_transaction",
+  "payment_id": "pay_demo_transaction",
+  "reason": "customer_asks_order_status",
+  "metadata": {
+    "invoice_number": "INV-LEDGERSOUL-001",
+    "customer_name": "Test Buyer",
+    "use_case": "transaction_reconciliation"
+  }
+}

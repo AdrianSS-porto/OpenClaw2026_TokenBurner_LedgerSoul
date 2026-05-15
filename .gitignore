@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Env
+.env
+
+# State and traces
+state/*.json
+state/*.jsonl
+traces/*.json
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+
+# Pytest
+.pytest_cache/
+.ruff_cache/

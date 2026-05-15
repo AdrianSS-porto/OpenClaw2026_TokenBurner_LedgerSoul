@@ -1,0 +1,10 @@
+{
+  "event_id": "evt_payment_recovered_001",
+  "type": "payment.recovered",
+  "timestamp": "2026-05-15T10:03:00Z",
+  "amount": 4900,
+  "currency": "USD",
+  "customer_id": "cus_001",
+  "payment_id": "pay_001",
+  "reason": "customer_completed_recovery"
+}

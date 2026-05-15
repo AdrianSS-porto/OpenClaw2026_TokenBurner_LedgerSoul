@@ -1,0 +1,7 @@
+{
+  "name": "sandbox_qris_small_order",
+  "tool_name": "create_qris_payment",
+  "tool_request": "Create a DOKU sandbox QRIS payment for invoice LS-MCP-003, amount 15000 IDR, description LedgerSoul QRIS test. Return the QR code payload or QR image URL and invoice number.",
+  "expected": "A sandbox QRIS payment response is returned for scan-to-pay testing.",
+  "risk": "sandbox_write"
+}

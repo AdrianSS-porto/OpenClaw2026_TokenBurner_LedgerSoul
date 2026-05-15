@@ -1,0 +1,10 @@
+{
+  "event_id": "evt_suspicious_001",
+  "type": "payment.suspicious",
+  "timestamp": "2026-05-15T10:15:00Z",
+  "amount": 99000,
+  "currency": "USD",
+  "customer_id": "cus_003",
+  "payment_id": "pay_003",
+  "reason": "velocity_risk"
+}

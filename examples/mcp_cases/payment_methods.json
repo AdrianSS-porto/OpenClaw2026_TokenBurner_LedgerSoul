@@ -1,0 +1,7 @@
+{
+  "name": "sandbox_merchant_payment_methods",
+  "tool_name": "get_merchant_payment_methods",
+  "tool_request": "List the payment categories and payment channels enabled for this DOKU sandbox merchant account. Return channel names, identifiers, and whether each method is active.",
+  "expected": "A list of enabled sandbox payment methods is returned.",
+  "risk": "read"
+}

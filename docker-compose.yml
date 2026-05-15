@@ -1,0 +1,10 @@
+services:
+  agent:
+    build: .
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./state:/app/state
+      - ./traces:/app/traces
+    restart: unless-stopped

@@ -1,0 +1,10 @@
+{
+  "event_id": "evt_refund_high_001",
+  "type": "refund.requested",
+  "timestamp": "2026-05-15T10:05:00Z",
+  "amount": 500000,
+  "currency": "USD",
+  "customer_id": "cus_002",
+  "payment_id": "pay_002",
+  "reason": "customer_requested"
+}

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LedgerSoul Judge Demo</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #070b16; color: #e8eefc; }
+    main { max-width: 1120px; margin: 0 auto; padding: 32px 20px 56px; }
+    .hero { border: 1px solid #23304d; background: linear-gradient(135deg, #111a31, #0b1020); border-radius: 24px; padding: 28px; box-shadow: 0 24px 80px rgba(0,0,0,.35); }
+    h1 { margin: 0 0 10px; font-size: 36px; letter-spacing: -0.03em; }
+    h2 { margin-top: 28px; }
+    p { color: #aebbe0; line-height: 1.55; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 18px; }
+    .card { border: 1px solid #263656; border-radius: 18px; padding: 16px; background: #0d1427; }
+    .card strong { display: block; margin-bottom: 6px; color: #ffffff; }
+    label { display: block; margin: 18px 0 8px; color: #d9e4ff; font-weight: 650; }
+    input { width: min(100%, 440px); box-sizing: border-box; border: 1px solid #33476f; background: #090f1f; color: #ffffff; border-radius: 12px; padding: 12px 14px; font-size: 15px; }
+    button { border: 0; border-radius: 999px; padding: 12px 18px; margin: 8px 8px 8px 0; background: #69e6a3; color: #04100a; font-weight: 800; cursor: pointer; }
+    button.secondary { background: #83b7ff; color: #061226; }
+    button:disabled { opacity: .55; cursor: wait; }
+    .panel { border: 1px solid #263656; border-radius: 18px; padding: 18px; background: #0d1427; margin-top: 16px; overflow: auto; }
+    .status { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill { border: 1px solid #314972; border-radius: 999px; padding: 8px 12px; background: #0a1122; color: #dce7ff; }
+    ol { padding-left: 24px; }
+    li { margin: 8px 0; color: #dce7ff; }
+    pre { white-space: pre-wrap; word-break: break-word; color: #d4ffe5; background: #060a13; border: 1px solid #22314f; border-radius: 14px; padding: 14px; max-height: 420px; overflow: auto; }
+    .muted { color: #8ea0ca; }
+    .error { color: #ffb4b4; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <h1>LedgerSoul Judge Demo</h1>
+    <p>Run locked payment-operations workflows and inspect the autonomous lifecycle trace. This page only calls allowlisted judge APIs.</p>
+    <div class="grid">
+      <div class="card"><strong>Agent profile</strong><span>Loaded and shown in traces</span></div>
+      <div class="card"><strong>agent.md</strong><span>Verified as operating contract</span></div>
+      <div class="card"><strong>DOKU mode</strong><span>Sandbox workflow only</span></div>
+      <div class="card"><strong>Tools</strong><span>Explicit registry execution</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <label for="token">Demo token</label>
+    <input id="token" type="password" autocomplete="off" placeholder="Enter judge demo token" />
+    <p class="muted">The token protects the demo from random public traffic. It is not a DOKU credential.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Workflows</h2>
+    <label for="invoice">Invoice number</label>
+    <input id="invoice" value="INV-LEDGERSOUL-001" />
+    <div>
+      <button id="transactionButton" onclick="runTransactionLookup()">Run Transaction Lookup</button>
+      <button id="dokuButton" class="secondary" onclick="runDokuPaymentMethods()">Run DOKU Payment Methods</button>
+    </div>
+    <p class="muted">Transaction lookup is deterministic. DOKU payment methods is a read-only sandbox MCP workflow.</p>
+  </section>
+
+  <section class="panel" id="resultPanel" hidden>
+    <h2>Result</h2>
+    <div class="status" id="status"></div>
+    <h2>Timeline</h2>
+    <ol id="timeline"></ol>
+    <h2>Redacted trace</h2>
+    <pre id="trace"></pre>
+  </section>
+</main>
+<script>
+  const tokenInput = document.getElementById('token');
+  tokenInput.value = localStorage.getItem('ledgersoul_judge_token') || '';
+  tokenInput.addEventListener('input', () => localStorage.setItem('ledgersoul_judge_token', tokenInput.value));
+
+  function setLoading(isLoading) {
+    document.getElementById('transactionButton').disabled = isLoading;
+    document.getElementById('dokuButton').disabled = isLoading;
+  }
+
+  async function runWorkflow(workflow, inputs) {
+    setLoading(true);
+    try {
+      const response = await fetch('/judge/runs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${tokenInput.value}`
+        },
+        body: JSON.stringify({ workflow, inputs })
+      });
+      const body = await response.json();
+      if (!response.ok) {
+        throw new Error(body.detail || 'Workflow failed');
+      }
+      renderResult(body);
+    } catch (error) {
+      renderError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function runTransactionLookup() {
+    runWorkflow('transaction_lookup', { invoice_number: document.getElementById('invoice').value });
+  }
+
+  function runDokuPaymentMethods() {
+    runWorkflow('doku_payment_methods', {});
+  }
+
+  function renderResult(body) {
+    document.getElementById('resultPanel').hidden = false;
+    document.getElementById('status').innerHTML = [
+      ['Status', body.status],
+      ['Classification', body.classification],
+      ['Risk', body.risk_level],
+      ['Verification', body.verification && body.verification.reason],
+      ['Tools used', (body.tools_used || []).join(', ')]
+    ].map(([key, value]) => `<span class="pill"><strong>${key}:</strong> ${value || '-'}</span>`).join('');
+    document.getElementById('timeline').innerHTML = (body.timeline || [])
+      .map(step => `<li>${step.ok ? '✅' : '⚠️'} <strong>${step.label}</strong>: ${step.detail || ''}</li>`)
+      .join('');
+    document.getElementById('trace').textContent = JSON.stringify(body.redacted_trace || body, null, 2);
+  }
+
+  function renderError(message) {
+    document.getElementById('resultPanel').hidden = false;
+    document.getElementById('status').innerHTML = `<span class="pill error"><strong>Error:</strong> ${message}</span>`;
+    document.getElementById('timeline').innerHTML = '';
+    document.getElementById('trace').textContent = '';
+  }
+</script>
+</body>
+</html>
